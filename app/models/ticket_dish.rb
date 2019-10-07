@@ -1,0 +1,2 @@
+class TicketDish < ApplicationRecord
+end
