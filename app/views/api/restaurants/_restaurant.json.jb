@@ -1,0 +1,7 @@
+{
+  id: restaurant.id,
+  name: restaurant.name,
+  address: restaurant.address,
+  cuisine: restaurant.cuisine,
+  hours: restaurant.hours
+}
