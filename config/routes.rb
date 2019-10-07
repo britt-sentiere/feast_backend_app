@@ -8,6 +8,9 @@ Rails.application.routes.draw do
 
   get '/ticket_dishes' => 'ticket_dishes#index'
   get '/ticket_dishes/:id' => 'ticket_dishes#show'
+
+  get '/dishes' => 'dishes#index'
+  get '/dishes/:id' => 'dishes#show'
  end 
 end
 
