@@ -1,0 +1,5 @@
+{
+  id: ticket.id,
+  user_id: ticket.user_id,
+  restaurant_id: ticket.restaurant_id
+}

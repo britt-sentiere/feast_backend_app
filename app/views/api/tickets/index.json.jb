@@ -1,0 +1,3 @@
+@tickets.map do |ticket|
+  render partial: 'ticket.json.jb', locals: {ticket: ticket}
+end 

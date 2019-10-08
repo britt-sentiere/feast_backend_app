@@ -1,0 +1,8 @@
+{
+  id: dish.id,
+  name: dish.name,
+  currency: dish.currency,
+  price: dish.price,
+  description: dish.description,
+  restaurant_id: dish.restaurant_id
+}
