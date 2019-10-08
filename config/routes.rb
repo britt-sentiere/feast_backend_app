@@ -13,6 +13,8 @@ Rails.application.routes.draw do
 
   get '/dishes' => 'dishes#index'
   get '/dishes/:id' => 'dishes#show'
+
+  get '/sms_text' => 'tickets#sms_text'
  end 
 end
 

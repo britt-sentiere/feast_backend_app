@@ -61,6 +61,3 @@ end
   puts "Your Total Check: "
   puts "-" * 60.center(80)
 
-  ticket_dish.each do |ticket|
-    
-  end 
