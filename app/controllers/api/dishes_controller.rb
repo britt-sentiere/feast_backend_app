@@ -5,7 +5,7 @@ class Api::DishesController < ApplicationController
     end
 
     def show
-      @dish = dish.find(params[:id])
+      @dish = Dish.find(params[:id])
       render 'show.json.jb'
     end
 end
