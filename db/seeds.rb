@@ -24,7 +24,7 @@ xyz_ref_nums.each do |num|
   unformatted_dishes.each do |dish|
     Dish.create(
                 name: dish["menu_item_name"],
-                currency: dish["menu_item_pricing"][0]["currency"] || dish["menu_item_pricing"][0][0]["currency"], # PROBABLY NOT RIGHT
+                currency: (dish["menu_item_pricing"][0] && dish["menu_item_pricing"][0]["currency"] || dish["menu_item_pricing"][0][0]["currency"]) || "N/A", # PROBABLY NOT RIGHT
                 price: dish["menu_item_pricing"][0]["price"] || dish["menu_item_pricing"][0][0]["price"], # PROBABLY NOT RIGHT
                 description: dish["menu_item_description"],
                 restaurant_id: Restaurant.find_by(xyz_ref_num: dish["restaurant_id"]).id
