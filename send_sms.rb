@@ -3,8 +3,8 @@ require 'twilio-ruby'
 
 
    
-account_sid = 'ACaec65283ab4b6f5470647a871aeb69bf' 
-auth_token = 'debd1769b32f1c9991ac84721884baf3' 
+account_sid = 'account_sid' 
+auth_token = 'auth_token' 
 @client = Twilio::REST::Client.new(account_sid, auth_token) 
  
 message = @client.messages.create(  
