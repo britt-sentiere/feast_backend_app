@@ -1,0 +1,1 @@
+render partial: 'ticket_dish.json.jb', locals: {ticket_dish: @ticket_dish}

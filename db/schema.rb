@@ -10,35 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_08_205221) do
-
+ActiveRecord::Schema.define(version: 2019_10_08_202348) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "dishes", force: :cascade do |t|
     t.string "name"
     t.string "currency"
-    t.decimal "price", precision: 6, scale: 2
-    t.text "description"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.integer "restaurant_id"
-  end
-
-  create_table "menus", force: :cascade do |t|
+    t.integer "price"
+    t.string "description"
     t.integer "restaurant_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-  end
-
-  create_table "restaurants", force: :cascade do |t|
-    t.string "name"
-    t.string "address"
-    t.string "cuisine"
-    t.string "hours"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.integer "xyz_ref_num"
   end
 
   create_table "ticket_dishes", force: :cascade do |t|
@@ -51,6 +34,16 @@ ActiveRecord::Schema.define(version: 2019_10_08_205221) do
   create_table "tickets", force: :cascade do |t|
     t.integer "user_id"
     t.integer "restaurant_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "total_check"
+    t.string "status"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "first_name"
+    t.string "last_name"
+    t.integer "ticket_number"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
