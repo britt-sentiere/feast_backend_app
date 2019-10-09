@@ -1,6 +1,7 @@
 class Api::DishesController < ApplicationController
 
     def index
+      # @dishes = Dish.find_by(params[:restaurant_id])
       @dishes = Dish.all
       render 'index.json.jb'
     end

@@ -1,4 +1,4 @@
 class Dish < ApplicationRecord
-  belongs_to :ticket_dish
   belongs_to :restaurant
+  has_many :tickets, through: :ticket_dish
 end

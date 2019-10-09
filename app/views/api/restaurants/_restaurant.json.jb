@@ -3,5 +3,6 @@
   name: restaurant.name,
   address: restaurant.address,
   cuisine: restaurant.cuisine,
+  dishes: restaurant.dishes,
   hours: restaurant.hours
 }
