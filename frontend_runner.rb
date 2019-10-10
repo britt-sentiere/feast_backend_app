@@ -6,7 +6,7 @@ class FeastClient
 
   def display_main_menu
     
-    selection_array = []
+    @selection_array = []
 
     user_value = ""
 
@@ -30,14 +30,14 @@ class FeastClient
     puts
     exit if user_selection == "3"
 
-    restaurant_id = ""
+    @restaurant_id = ""
 
     if user_selection == "1"
       show_restaurants
-      choose_restaurant(restaurant_id)
+      choose_restaurant
    
     else
-      choose_restaurant(restaurant_id)
+      choose_restaurant
     end
 
     item_id = ""
@@ -46,17 +46,17 @@ class FeastClient
     puts "Select item ID or type 'done'" 
     item_id = gets.chomp
       if item_id != "done"
-        add_to_ticket(item_id, restaurant_id, selection_array)
+        add_to_ticket(item_id, @restaurant_id, @selection_array)
       end 
     end 
 
-    show_ticket(user_value, selection_array)
+    show_ticket(user_value, @selection_array)
    
 
     if user_value == "cancel"
       display_main_menu
     else 
-      reserve(user_value, selection_array)
+      reserve(user_value, @selection_array)
     end
 
     exit
@@ -89,17 +89,17 @@ class FeastClient
     end 
   end
 
-  def choose_restaurant(restaurant_id)
+  def choose_restaurant
     puts "Please select a restaurant(by id number): "
     puts
-    puts "Return to main menu by inputting 'exit'"
+    puts "Return to main menu by typing 'exit'"
     response = gets.chomp
-    restaurant_id = response
+    @restaurant_id = response
 
     if response == "exit"
       display_main_menu
     else 
-      show_restaurant(response.to_i) 
+      show_restaurant
     end 
   end
 
@@ -127,8 +127,8 @@ class FeastClient
   #   end
   # end
 
-  def show_restaurant(restaurant_id)
-    response = HTTP.get("http://localhost:3000/api/restaurants/#{restaurant_id}")
+  def show_restaurant
+    response = HTTP.get("http://localhost:3000/api/restaurants/#{@restaurant_id}")
     restaurant = response.parse
 
     puts "id: #{restaurant["id"]}"
@@ -159,8 +159,7 @@ class FeastClient
   def add_to_ticket(item_id, restaurant_id, selection_array)
     # add one dish at a time to an order
 
-    restaurant_id = 21 # need to figure out why restaurant_id isn't passing
-    response = HTTP.get("http://localhost:3000/api/restaurants/#{restaurant_id}")
+    response = HTTP.get("http://localhost:3000/api/restaurants/#{@restaurant_id}")
     restaurant = response.parse
     
     dishes = restaurant["dishes"]
@@ -175,7 +174,7 @@ class FeastClient
 
         temp_array = ["item_id" => "#{item_id}", "item_name" => "#{name}", "item_description" => "#{description}", "item_price" => "#{price}"]
 
-        selection_array << temp_array
+        @selection_array << temp_array
       end 
     end
   end
@@ -184,9 +183,9 @@ class FeastClient
   def show_ticket(value, selection_array)
 
 
-    puts selection_array
+    puts @selection_array
     puts 
-    # edit selection_array display
+    # edit @selection_array display
     # show all dishes and total price so far
     # should also return to show_dishes OR reserve
     # dishes_response (put in if statement) 
@@ -201,27 +200,27 @@ class FeastClient
     temp_body = "You have ordered: "
 
 
-    while index < selection_array.count
-      temp_body += selection_array[index].to_s + ", " 
-      index += 1
-    end 
+    # while index < @selection_array.count
+    #   temp_body += @selection_array[index]["item_name"].to_s + ", " 
+    #   index += 1
+    # end 
 
     if value == "cancel"
       puts "Goodbye"
     else 
       puts "Order has been processed!"
 
-      # account_sid = ''
-      # auth_token = ''
-      # client = Twilio::REST::Client.new(account_sid, auth_token)
+      account_sid = ''
+      auth_token = ''
+      client = Twilio::REST::Client.new(account_sid, auth_token)
 
-      # from = '+' # Your Twilio number
-      # to = '+mynumber' # Your mobile phone number
+      from = '+1' # Your Twilio number
+      to = '+1' # Your mobile phone number
 
-      # client.messages.create(
-      # from: from,
-      # to: to,
-      # body: temp_body)
+      client.messages.create(
+      from: from,
+      to: to,
+      body: temp_body)
     end 
     # call sms_text in tickets controller
     
@@ -298,7 +297,7 @@ feast.run_feast
 #     puts "name: #{dish["name"]}"
 #     puts "price: #{dish["price"]}"
 #     puts "description: #{dish["description"]}"
-#     puts "restaurant_id: #{dish["restaurant_id"]}"
+#     puts "@restaurant_id: #{dish["restaurant_id"]}"
 #     puts
 #     puts ("-" * 60).center(80)
 #   end
