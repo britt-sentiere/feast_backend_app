@@ -1,39 +1,71 @@
 class FeastClient
 
   require 'http'
+  require 'twilio-ruby'
 
 
   def display_main_menu
+    
+    selection_array = []
+
+    user_value = ""
+
     system "clear"
 
-      puts "=" * 80
-      puts "Feast App".center(80)
-      puts "=" * 80
-      puts ""
+    puts "=" * 80
+    puts "Feast App".center(80)
+    puts "=" * 80
+    puts ""
 
-      puts "Main Menu"
-      puts "-" * 80
-      puts
-      puts "   [1] All Restaurants"
-      puts "   [2] View A Restaurant"
-      # puts "   [1] Dish Index"
-      # puts "   [2] Dish Show"
-      puts 
+    puts "Main Menu"
+    puts "-" * 80
+    puts
+    puts "   [1] View All Restaurants"
+    puts "   [2] View A Restaurant"
+    puts "   [3] Exit App"
+    puts 
 
-      print "Pick an option: "
-      user_selection = gets.chomp
-      puts
-      main_menu_response(user_selection)
-  
-  end
+    print "Pick an option: "
+    user_selection = gets.chomp
+    puts
+    exit if user_selection == "3"
 
-  def main_menu_response(user_selection)
+    restaurant_id = ""
+
     if user_selection == "1"
       show_restaurants
-    elsif user_selection == "2"
-      choose_restaurant
+      choose_restaurant(restaurant_id)
+   
+    else
+      choose_restaurant(restaurant_id)
     end
+
+    item_id = ""
+
+    while item_id != "done"
+    puts "Select item ID or type 'done'" 
+    item_id = gets.chomp
+      if item_id != "done"
+        add_to_ticket(item_id, restaurant_id, selection_array)
+      end 
+    end 
+
+    show_ticket(user_value, selection_array)
+   
+
+    if user_value == "cancel"
+      display_main_menu
+    else 
+      reserve(user_value, selection_array)
+    end
+
+    exit
+
   end
+
+  # def main_menu_response(user_selection)
+    
+  # end
 
   def show_restaurants
     response = HTTP.get("http://localhost:3000/api/restaurants")
@@ -55,21 +87,45 @@ class FeastClient
       puts
       
     end 
-    choose_restaurant
   end
 
-  def choose_restaurant
+  def choose_restaurant(restaurant_id)
     puts "Please select a restaurant(by id number): "
     puts
     puts "Return to main menu by inputting 'exit'"
     response = gets.chomp
-    
+    restaurant_id = response
+
     if response == "exit"
       display_main_menu
     else 
       show_restaurant(response.to_i) 
     end 
   end
+
+  # def choose_item
+  #   response = ""
+  #    while response != "done" || response != "exit"
+  #     puts "Please select an item by id number or type 'done' to complete your order or 'exit' to cancel order"
+  #     response = gets.chomp
+  #     if response == "exit"
+  #       display_main_menu
+  #     elsif response == "done"
+  #       show_ticket
+  #       puts "If this looks correct, type 'order', or type 'modify' to update order, or type 'cancel' if you no longer want this order"
+  #       response = gets.chomp 
+  #       if response == "cancel"
+  #         display_main_menu
+  #       elsif response == "order"
+  #         reserve
+  #       else 
+
+  #       end  
+  #     else
+  #       add_to_ticket
+  #     end 
+  #   end
+  # end
 
   def show_restaurant(restaurant_id)
     response = HTTP.get("http://localhost:3000/api/restaurants/#{restaurant_id}")
@@ -97,39 +153,94 @@ class FeastClient
       puts "description: #{dish["description"]}"
       puts "-" * 80
 
-      # return to main menu 
     end
   end
 
-  def add_to_ticket
+  def add_to_ticket(item_id, restaurant_id, selection_array)
     # add one dish at a time to an order
-    # dishes_response(put in if statement)
+
+    restaurant_id = 21 # need to figure out why restaurant_id isn't passing
+    response = HTTP.get("http://localhost:3000/api/restaurants/#{restaurant_id}")
+    restaurant = response.parse
+    
+    dishes = restaurant["dishes"]
+    dishes.each do |dish|
+
+
+      if item_id.to_i == dish["id"].to_i
+       
+        name = dish["name"]
+        description = dish["description"]
+        price = dish["price"]
+
+        temp_array = ["item_id" => "#{item_id}", "item_name" => "#{name}", "item_description" => "#{description}", "item_price" => "#{price}"]
+
+        selection_array << temp_array
+      end 
+    end
   end
 
-  def show_ticket
+
+  def show_ticket(value, selection_array)
+
+
+    puts selection_array
+    puts 
+    # edit selection_array display
     # show all dishes and total price so far
     # should also return to show_dishes OR reserve
-    # dishes_response (put in if statement)
+    # dishes_response (put in if statement) 
+
+    puts "Type 'order' or 'cancel'"
+    value = gets.chomp
   end
 
-  def reserve
-    # show all dishes and total price
+  def reserve(value, selection_array)
+
+    index = 0
+    temp_body = "You have ordered: "
+
+
+    while index < selection_array.count
+      temp_body += selection_array[index].to_s + ", " 
+      index += 1
+    end 
+
+    if value == "cancel"
+      puts "Goodbye"
+    else 
+      puts "Order has been processed!"
+
+      # account_sid = ''
+      # auth_token = ''
+      # client = Twilio::REST::Client.new(account_sid, auth_token)
+
+      # from = '+' # Your Twilio number
+      # to = '+mynumber' # Your mobile phone number
+
+      # client.messages.create(
+      # from: from,
+      # to: to,
+      # body: temp_body)
+    end 
+    # call sms_text in tickets controller
+    
+    # show all dishes and total price in text (not terminal)
     # incorporate twilio here
-    # show_ticket
   end
 
-  def display_dishes_options
-    # when in the dishes menu
-    # displays add to ticket option, show ticket option, and reserve option 
-    # set user_selection = gets.chomp (translate to to_i)
-    # display main menu here as well
-  end
+  # def display_dishes_options
+  #   # when in the dishes menu
+  #   # displays add to ticket option, show ticket option, and reserve option 
+  #   # set user_selection = gets.chomp (translate to to_i)
+  #   # display main menu here as well
+  # end
 
-  def dishes_response(user_selection)
-    # based on user selection (number) run add to ticket, show ticket, or reserve
-  end
+  # def dishes_response(user_selection)
+  #   # based on user selection (number) run add to ticket, show ticket, or reserve
+  # end
 
-  # always make sure it gives options to go back to another view 
+  # # always make sure it gives options to go back to another view 
 
 
   def run_feast
@@ -212,4 +323,3 @@ feast.run_feast
 #   puts ("-" * 60).center(80)
 #   puts "Your Total Check: "
 #   puts ("-" * 60).center(80)
-
